@@ -1,0 +1,107 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="viewport" content="width=device-width"/>
+
+<title>クイズ 4Q福井</title>
+<link rel="apple-touch-icon" href="q4js-icon.png"/>
+<meta property="og:image" content="q4js-ss.png"/>
+<link rel="stylesheet" type="text/css" href="q4js.css"/>
+<script src=https://taisukef.github.io/q4js/fukuno.js></script>
+<script src=https://taisukef.github.io/q4js/q4.js></script>
+<script src="https://code4fukui.github.io/localgovjp/localgovjp.js"></script>
+
+<style>
+body {
+	font-family: serif;
+}
+.theme {
+	background: rgb(201, 172, 135);
+}
+</style>
+<script>"use strict"
+const pushUnique = function(ar, v) {
+	for (var i = 0; i < ar.length; i++)
+		if (ar[i] == v)
+			return
+	ar.push(v)
+}
+const cutYomiPost = function(yomi) {
+	if (yomi.endsWith("ちょう"))
+		return yomi.substring(0, yomi.length - 3)
+	if (yomi.endsWith("まち"))
+		return yomi.substring(0, yomi.length - 2)
+	if (yomi.endsWith("し"))
+		return yomi.substring(0, yomi.length - 1)
+	return yomi
+}
+window.onload = function() {
+	const dataall = LOCALGOV_JP
+	var data = []
+	for (var i = 0; i < dataall.length; i++) {
+		var d = dataall[i]
+		if (d.pref == "福井県")
+			data.push(d)
+	}
+	var quiz = []
+	for (var i = 0; i < data.length; i++) {
+		var d = data[i]
+		const lat = d.lat
+		const lng = d.lng
+		const pref = d.pref
+		const city = d.city
+		var phrase = d.phrase
+		const yomi = d.citykana
+		const url = d.url
+		
+		if (phrase == "") {
+			phrase = "[ ノーヒント ]"
+		}
+		const sec = "◯◯"
+//		console.log([pref, city, yomi, phrase ].join(" "))
+		phrase = phrase.replace(city, sec)
+		var city2 = city.substring(0, city.length - 1)
+		phrase = phrase.replace(city2, sec)
+		phrase = phrase.replace(yomi, sec)
+		var yomi2 = cutYomiPost(yomi)
+		phrase = phrase.replace(yomi2, sec)
+		
+		var ans = [ phrase, city ]
+		for (var j = 0; j < 10; j++) {
+			var d2 = data[rnd(data.length)]
+			pushUnique(ans, d2.city)
+		}
+		quiz.push(ans)
+	}
+	shuffle(quiz)
+	startQuiz("クイズ 4Q福井", quiz, function(pnt) {
+		var s = "あなたの福井率 " + fixfloat(100 * pnt / quiz.length, 0) + "%"
+		if (confirm(s + " リトライ？")) {
+			location.reload()
+		} else if (confirm("解説を読みますか？")) {
+			location = "https://fukuno.jig.jp/2356"
+		}
+	})
+}
+</script>
+</head><body>
+
+<div id=head class=theme></div>
+<div id=main>
+	<!--<div id=ind class=indcorrect></div>-->
+	<div id=ind class=indcorrect></div>
+	<!--<div id=ind class=indincorrect>不正解</div>-->
+	<div id=q></div>
+	<div id=ans>
+		<div id=ans1></div>
+		<div id=ans2 xclass=correct></div>
+		<div id=ans3></div>
+		<div id=ans4 xclass=disable></div>
+	</div>
+</div>
+
+<div id=credit class=theme>
+	<a href=https://fukuno.jig.jp/2381>CC BY fukuno.jig.jp - クイズ4Q福井 / q4js</a>
+</div>
+
+</body></html>
