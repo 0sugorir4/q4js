@@ -1,0 +1,42 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="viewport" content="width=device-width"/>
+
+<title>テストクイズ - q4.js</title>
+<link rel="apple-touch-icon" href="q4js-icon.png"/>
+<meta property="og:image" content="q4js-ss.png"/>
+<link rel="stylesheet" type="text/css" href="https://fukuno.jig.jp/app/game/q4js/q4js.css"/>
+<script src=https://fukuno.jig.jp/app/game/q4js/fukuno.js></script>
+<script src=https://fukuno.jig.jp/app/game/q4js/q4.js></script>
+
+<script>"use strict"
+window.onload = function() {
+	var quiz = [
+		[ "1+1は？", "2", "3", "4", "5", "0", "i" ],
+		[ "iの2乗は？", "-1", "ii", "1", "0", "i2", "i" ],
+	]
+	startQuiz("テストクイズ", quiz)
+}
+</script>
+</head><body>
+
+<div id=head class=theme>第1問</div>
+<div id=main>
+	<!--<div id=ind class=indcorrect></div>-->
+	<div id=ind class=indcorrect>正解</div>
+	<!--<div id=ind class=indincorrect>不正解</div>-->
+	<div id=q>魁のよみは？</div>
+	<div id=ans>
+		<div id=ans1>さきかけ</div>
+		<div class=correct id=ans2>さきがけ</div>
+		<div id=ans3>ささき</div>
+		<div class=disable id=ans4>がけがけ</div>
+	</div>
+</div>
+
+<div id=credit class=theme>
+	<a href=https://fukuno.jig.jp/2355>CC BY fukuno.jig.jp - 4択クイズアプリ framework q4.js</a>
+</div>
+
+</body></html>

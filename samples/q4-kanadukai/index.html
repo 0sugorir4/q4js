@@ -1,0 +1,135 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="viewport" content="width=device-width"/>
+
+<title>Q仮名遣い</title>
+<link rel="apple-touch-icon" href="q4js-icon.png"/>
+<meta property="og:image" content="q4js-ss.png"/>
+<link rel="stylesheet" type="text/css" href="q4js.css"/>
+<script src=fukuno.js></script>
+<script src=csv.js></script>
+<script src=q4.js></script>
+
+<style>
+body {
+	font-family: serif;
+}
+.theme {
+	background: rgb(201, 172, 135);
+}
+</style>
+<script>"use strict"
+var pushUnique = function(ar, v) {
+	for (var i = 0; i < ar.length; i++)
+		if (ar[i] == v)
+			return
+	ar.push(v)
+}
+window.onload = function() {
+	var title = "歴史的仮名遣いクイズ"
+	var easymode = true
+
+	var startQuizKanadukai = function(data) {
+		var items = []
+		for (var i = 1; i < data.length; i++) {
+			var d = data[i]
+			var x = d[3].split("　")
+			for (var j = 0; j < x.length; j++) {
+				var s = x[j]
+				if (easymode && (s.indexOf("＊") >= 0 || s.indexOf("△") >= 0)) {
+					continue;
+				}
+				s = s.replace(/＊/g, "")
+				s = s.replace(/△/g, "")
+				var n = s.indexOf('(')
+				if (n >= 0)
+					s = s.substring(0, n)
+				if (s.indexOf(d[2]) == -1) {
+					items.push([ katakanaToHiragana(d[0]), d[1], d[2], s])
+					//console.log(d[0], d[1], d[2], s)
+				}
+			}
+		}
+		shuffle(items)
+		var quiz = []
+		// 次のイと読む「石」は、歴史的仮名遣いではどれ？
+		for (var i = 0; i < items.length; i++) {
+			var it = items[i]
+			var s = "「" + it[1] + "」と書き「" + it[0] + "」という読みを含む「" + it[3] + "」、歴史的仮名遣いではどれ？"
+			var ans = [ it[2] ]
+			pushUnique(ans, it[1])
+			for (var j = 0; j < items.length; j++) {
+				var ij = items[j]
+				if (ij[0] == it[0] && ij[1] == it[1] && ij[2] != it[2]) {
+					//ans.pushUnique(it[2])
+					pushUnique(ans, ij[2])
+					if (ans.length == 4)
+						break
+				}
+			}
+			for (var k = 0; k < items.length; k++) {
+				if (ans.length == 4)
+					break
+				var n = rnd(items.length)
+				var ik = items[n]
+				//ans.pushUnique(it[2])
+				pushUnique(ans, ik[2])
+			}
+			ans.unshift(s)
+			quiz.push(ans)
+		}
+		//alert(quiz.length) // 全417問, easymode 全370問 (kanadukai-an)
+		//alert(quiz.length) // 全403問, esaymode 全386問 (kanadukai)
+		while (quiz.length > 10)
+			quiz.pop()
+		
+		startQuiz(title, quiz, function(pnt) {
+			var s = "正答率 " + fixfloat(100 * pnt / quiz.length, 0) + "%"
+			if (confirm(s + " リトライ？")) {
+				easymode = false
+				startQuizKanadukai(data) // location.reload()
+			} else if (confirm("解説を読みますか？")) {
+				location = "https://fukuno.jig.jp/2356"
+			}
+		})
+	}
+	var dataurl = "https://fukuno.jig.jp/app/csv/data/kanadukai.csv"
+	getJSON(dataurl, function(data) {
+		startQuizKanadukai(data)
+	}, "utf-8")
+}
+const katakanaToHiragana = function(s) {
+	return s.replace(/[\u30a1-\u30f6]/g, function(match) {
+		const c = match.charCodeAt(0) - 0x60
+		return String.fromCharCode(c)
+	})
+}
+const hiraganaToKatakanafunction = function(s) {
+	return s.replace(/[\u3041-\u3096]/g, function(match) {
+		const c = match.charCodeAt(0) + 0x60
+		return String.fromCharCode(c)
+	})
+}
+</script>
+</head><body>
+
+<div id=head class=theme></div>
+<div id=main>
+	<!--<div id=ind class=indcorrect></div>-->
+	<div id=ind class=indcorrect></div>
+	<!--<div id=ind class=indincorrect>不正解</div>-->
+	<div id=q></div>
+	<div id=ans>
+		<div id=ans1></div>
+		<div id=ans2 xclass=correct></div>
+		<div id=ans3></div>
+		<div id=ans4 xclass=disable></div>
+	</div>
+</div>
+
+<div id=credit class=theme>
+	<a href=https://fukuno.jig.jp/2356>CC BY fukuno.jig.jp - 歴史的仮名遣い4択クイズ / q4.js</a>
+</div>
+
+</body></html>

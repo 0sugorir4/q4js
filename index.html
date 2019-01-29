@@ -1,0 +1,68 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="viewport" content="width=device-width"/>
+
+<title>クイズ Ichigo Q - q4.js</title>
+<link rel="apple-touch-icon" href="q4js-icon.png"/>
+<meta property="og:image" content="q4js-ss.png"/>
+<link rel="stylesheet" type="text/css" href="q4js.css"/>
+<script src=fukuno.js></script>
+<script src=q4.js></script>
+
+<script>"use strict"
+window.onload = function() {
+	// タイトル
+	var title = "クイズ Ichigo Q"
+	// 問題文、正解、誤答3つ以上いくつでも
+	var quiz = [
+		[ "IchigoJamでLEDをつけるには？", "LED1", "LED0", "PRINT1", "CLS", "LED" ],
+		[ "IchigoJamの誕生日は？", "4/1", "1/5", "10/15", "10/10", "1/1", "12/31" ],
+		[ "PEEKコマンドと同じ働きをするコマンドは？", "ASC", "CHR$", "STR$", "POKE", "CLS" ],
+		[ "複雑すぎる式を実行しようとしてでるエラーは？", "Complex expression", "Syntax error", "Out of memory", "Too long", "Illegal argument", ],
+		[ "IchigoJamのプログラムで使える最大サイズは？", "1024byte", "512byte", "4KB", "32KB", "1000文字", "100文字" ],
+		[ "ALT+Cででるキャラクターは？", "ネコ", "イヌ", "宇宙人", "ハート", "宝箱" ],
+		[ "PRINTコマンドの省略形は？", "?", "PRT", "println", "print", "P" ],
+		[ "LCとは何の略？", "LOCATE", "LLC", "LOCATION", "LOCALIZE", "LCC" ],
+		[ "変数の最大値は？", "32767", "32768", "255", "65535", "30000", "1024" ],
+		[ "IchigoJamの名前の由来は？", "1,500円", "15,000円", "福井の特産物", "開発者の誕生日", "CPUの型番" ],
+	]
+	// クリアした時
+	var callback = function() {
+		// 即、ジャンプしたい場合はこちら
+//		location = "https://fukuno.jig.jp/2355"
+
+		// ダイアログ形式で尋ねたい場合はこちら
+		if (confirm("クイズフレームワーク q4.js についてくわしく知りたい")) {
+			location = "https://fukuno.jig.jp/2355"
+		} else if (confirm("こどもIchigoJamについて詳しく知りたい")) {
+			location = "https://ichigojam.net/"
+		} else if (confirm("もういちど？")) {
+			location.reload()
+		}
+	}
+	// クイズスタート
+	startQuiz(title, quiz, callback)
+}
+</script>
+</head><body>
+
+<div id=head class=theme>第1問</div>
+<div id=main>
+	<!--<div id=ind class=indcorrect></div>-->
+	<div id=ind class=indcorrect>正解</div>
+	<!--<div id=ind class=indincorrect>不正解</div>-->
+	<div id=q>魁のよみは？</div>
+	<div id=ans>
+		<div id=ans1>さきかけ</div>
+		<div class=correct id=ans2>さきがけ</div>
+		<div id=ans3>ささき</div>
+		<div class=disable id=ans4>がけがけ</div>
+	</div>
+</div>
+
+<div id=credit class=theme>
+	<a href=https://fukuno.jig.jp/2355>CC BY fukuno.jig.jp - 4択クイズアプリ framework q4.js</a>
+</div>
+
+</body></html>
