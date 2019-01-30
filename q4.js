@@ -6,8 +6,19 @@ var startQuiz = function(title, quiz, callback) {
 	var uienable = true
 
 	var show = function(aquiz) {
-		head.textContent = title + " - 第" + (nq + 1) + "問"
+		head.textContent = title + " - 第" + (nq + 1) + "問 / " + quiz.length + "問"
 		ind.textContent = ""
+
+		q.textContent = aquiz[0].substring(0, 1)
+		var nqs = 1
+		const tid = setInterval(function() {
+			nqs++
+			q.textContent = aquiz[0].substring(0, nqs)
+			if (nqs == aquiz[0].length)
+				clearInterval(tid)
+		}, 100)
+		uienable = true
+
 		var anss = []
 		for (var i = 0; i < aquiz.length - 2; i++)
 			anss[i] = aquiz[i + 2]
@@ -27,6 +38,9 @@ var startQuiz = function(title, quiz, callback) {
 				if (!uienable)
 					return
 				if (this.textContent == aquiz[1]) {
+					clearInterval(tid)
+					q.textContent = aquiz[0]
+
 					ind.textContent = "正解"
 					ind.className = "indcorrect"
 					this.className = "correct"
@@ -60,8 +74,6 @@ var startQuiz = function(title, quiz, callback) {
 				first = false
 			}
 		}
-		q.textContent = aquiz[0]
-		uienable = true
 	}
 
 	show(quiz[nq])

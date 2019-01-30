@@ -3,7 +3,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="viewport" content="width=device-width"/>
 
-<title>クイズ 4Q福井</title>
+<title>クイズ 4Q愛知</title>
 <link rel="apple-touch-icon" href="q4js-icon.png"/>
 <meta property="og:image" content="q4js-ss.png"/>
 <link rel="stylesheet" type="text/css" href="q4js.css"/>
@@ -33,14 +33,18 @@ const cutYomiPost = function(yomi) {
 		return yomi.substring(0, yomi.length - 2)
 	if (yomi.endsWith("し"))
 		return yomi.substring(0, yomi.length - 1)
+	if (yomi.endsWith("く"))
+		return yomi.substring(0, yomi.length - 1)
 	return yomi
 }
 window.onload = function() {
+	const qpref = "愛知"
+
 	const dataall = LOCALGOV_JP
 	var data = []
 	for (var i = 0; i < dataall.length; i++) {
 		var d = dataall[i]
-		if (d.pref == "福井県")
+		if (d.pref.indexOf(qpref) >= 0)
 			data.push(d)
 	}
 	var quiz = []
@@ -54,6 +58,9 @@ window.onload = function() {
 		const yomi = d.citykana
 		const url = d.url
 		
+		if (city.indexOf("豊田") != 0)
+			continue
+
 		if (phrase == "") {
 			phrase = "[ ノーヒント ]"
 		}
@@ -62,6 +69,12 @@ window.onload = function() {
 		phrase = phrase.replace(city, sec)
 		var city2 = city.substring(0, city.length - 1)
 		phrase = phrase.replace(city2, sec)
+		const n = city2.indexOf(" ")
+		if (n >= 0) {
+			city2 = city2.substring(n + 1)
+			phrase = phrase.replace(city2, sec)
+		}
+
 		phrase = phrase.replace(yomi, sec)
 		var yomi2 = cutYomiPost(yomi)
 		phrase = phrase.replace(yomi2, sec)
@@ -74,12 +87,13 @@ window.onload = function() {
 		quiz.push(ans)
 	}
 	shuffle(quiz)
-	startQuiz("クイズ 4Q福井", quiz, function(pnt) {
-		var s = "あなたの福井率 " + fixfloat(100 * pnt / quiz.length, 0) + "%"
+	quiz = quiz.slice(0, 10)
+	startQuiz("クイズ 4Q" + qpref, quiz, function(pnt) {
+		var s = "あなたの" + qpref + "率 " + fixfloat(100 * pnt / quiz.length, 0) + "%"
 		if (confirm(s + " リトライ？")) {
 			location.reload()
 		} else if (confirm("解説を読みますか？")) {
-			location = "https://fukuno.jig.jp/2381"
+			location = "https://fukuno.jig.jp/2382"
 		}
 	})
 }
@@ -101,7 +115,7 @@ window.onload = function() {
 </div>
 
 <div id=credit class=theme>
-	<a href=https://fukuno.jig.jp/2381>CC BY fukuno.jig.jp - クイズ4Q福井 / q4js</a>
+	<a href=https://fukuno.jig.jp/2382>CC BY fukuno.jig.jp - クイズ4Q愛知 / q4js</a>
 </div>
 
 </body></html>
