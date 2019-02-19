@@ -3,10 +3,10 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="viewport" content="width=device-width"/>
 
-<title>クイズ 4Q愛知</title>
+<title>クイズ 4Q日本</title>
 <link rel="apple-touch-icon" href="q4js-icon.png"/>
 <meta property="og:image" content="q4js-ss.png"/>
-<link rel="stylesheet" type="text/css" href="q4js.css"/>
+<link rel="stylesheet" type="text/css" href="https://taisukef.github.io/q4js/q4js.css"/>
 <script src=https://taisukef.github.io/q4js/fukuno.js></script>
 <script src=https://taisukef.github.io/q4js/q4.js></script>
 <script src="https://code4fukui.github.io/localgovjp/localgovjp.js"></script>
@@ -15,8 +15,25 @@
 body {
 	font-family: serif;
 }
-.theme {
-	background: rgb(201, 172, 135);
+#head {
+	background: rgb(190, 0, 63);
+}
+#credit {
+	background: rgb(190, 0, 63);
+}
+#ans > div {
+	font-size: 3vw;
+	line-height: 7.5vh;
+}
+#ans > div > a {
+	text-decoration: none;
+	color: white !important;
+}
+#q {
+	height: 10vh;
+	font-size: 2.8vh;
+	padding: 0.5vh;
+	color: black;
 }
 </style>
 <script>"use strict"
@@ -35,21 +52,37 @@ const cutYomiPost = function(yomi) {
 		return yomi.substring(0, yomi.length - 1)
 	if (yomi.endsWith("く"))
 		return yomi.substring(0, yomi.length - 1)
+	if (yomi.endsWith("むら"))
+		return yomi.substring(0, yomi.length - 2)
+	if (yomi.endsWith("そん"))
+		return yomi.substring(0, yomi.length - 2)
 	return yomi
 }
+const cut2 = function(s) {
+	s = s.split(" ")
+	return s[s.length - 1]
+}
 window.onload = function() {
-	const qpref = "愛知"
-
 	const dataall = LOCALGOV_JP
 	var data = []
 	for (var i = 0; i < dataall.length; i++) {
 		var d = dataall[i]
-		if (d.pref.indexOf(qpref) >= 0)
+//		if (d.pref == "福井県")
+		if (true)
+		//if (d.city.indexOf("手") >= 0)
+		//if (d.city.indexOf("札幌市") >= 0)
+		//if (d.pref == "沖縄県")
 			data.push(d)
 	}
-	shuffle(data)
 	var quiz = []
-	for (var i = 0; i < data.length; i++) {
+	shuffle(data)
+	const makeAnswer = function(d2) {
+		var s = d2.pref + " " + d2.city + "（" + cut2(d2.citykana) + "）"
+		s += "<a href=" + d2.url + " target=_blank rel=noopener>❏</a>"
+		return s
+	}
+	const MAX_QUIZ = 10
+	for (var i = 0; i < Math.min(MAX_QUIZ, data.length); i++) {
 		var d = data[i]
 		const lat = d.lat
 		const lng = d.lng
@@ -59,41 +92,42 @@ window.onload = function() {
 		const yomi = d.citykana
 		const url = d.url
 		
-//		if (city.indexOf("豊田") != 0)
-//			continue
-
 		if (phrase == "") {
 			phrase = "[ ノーヒント ]"
 		}
 		const sec = "◯◯"
-//		console.log([pref, city, yomi, phrase ].join(" "))
-		phrase = phrase.replace(city, sec)
-		var city2 = city.substring(0, city.length - 1)
-		phrase = phrase.replace(city2, sec)
-		const n = city2.indexOf(" ")
-		if (n >= 0) {
-			city2 = city2.substring(n + 1)
+		var citys = city.split(" ")
+		var yomis = yomi.split(" ")
+		for (var j = 0; j < citys.length; j++) {
+			const c = citys[j]
+			const y = yomis[j]
+			phrase = phrase.replace(c, sec)
+			var city2 = c.substring(0, c.length - 1)
 			phrase = phrase.replace(city2, sec)
+			phrase = phrase.replace(y, sec)
+			var yomi2 = cutYomiPost(y)
+			phrase = phrase.replace(yomi2, sec)
 		}
 
-		phrase = phrase.replace(yomi, sec)
-		var yomi2 = cutYomiPost(yomi)
-		phrase = phrase.replace(yomi2, sec)
-		
-		var ans = [ phrase, city ]
+		var ans = [ phrase, makeAnswer(d) ]
 		for (var j = 0; j < 10; j++) {
 			var d2 = data[rnd(data.length)]
-			pushUnique(ans, d2.city)
+			pushUnique(ans, makeAnswer(d2))
 		}
-		quiz.push(ans)
+		/*
+		if (city == "金沢市") {
+			for (var j = 0; j < MAX_QUIZ; j++)
+				quiz.push(ans)
+		}
+		*/
 	}
-	quiz = quiz.slice(0, 10)
-	startQuiz("クイズ 4Q" + qpref, quiz, function(pnt) {
-		var s = "あなたの" + qpref + "率 " + fixfloat(100 * pnt / quiz.length, 0) + "%"
+
+	startQuiz("クイズ 4Q日本", quiz, function(pnt) {
+		var s = "あなたの日本率 " + fixfloat(100 * pnt / quiz.length, 0) + "%"
 		if (confirm(s + " リトライ？")) {
 			location.reload()
 		} else if (confirm("解説を読みますか？")) {
-			location = "https://fukuno.jig.jp/2382"
+			location = "https://fukuno.jig.jp/2402"
 		}
 	})
 }
@@ -115,7 +149,7 @@ window.onload = function() {
 </div>
 
 <div id=credit class=theme>
-	<a href=https://fukuno.jig.jp/2382>CC BY fukuno.jig.jp - クイズ4Q愛知 / q4js</a>
+	<a href=https://fukuno.jig.jp/2402>CC BY fukuno.jig.jp - クイズ4Q日本 / q4js</a>
 </div>
 
 </body></html>

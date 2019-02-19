@@ -32,12 +32,17 @@ var startQuiz = function(title, quiz, callback) {
 		for (var i = 0; i < 4; i++) {
 			var div = get("ans" + (i + 1))
 			div.className = ""
-			div.textContent = anss2[i]
+			//div.textContent = anss2[i]
+			div.innerHTML = anss2[i]
+			div.answer = anss2[i] == aquiz[1]
 			div.no = i
-			div.onclick = function() {
+			div.onclick = function(e) {
 				if (!uienable)
 					return
-				if (this.textContent == aquiz[1]) {
+				if (e.target.tagName == "A")
+					return
+				//if (this.textContent == aquiz[1]) {
+				if (this.answer) {
 					clearInterval(tid)
 					q.textContent = aquiz[0]
 
