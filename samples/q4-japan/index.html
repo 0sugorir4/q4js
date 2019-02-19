@@ -74,6 +74,7 @@ window.onload = function() {
 		//if (d.pref == "沖縄県")
 			data.push(d)
 	}
+//	alert(data.length)
 	var quiz = []
 	shuffle(data)
 	const makeAnswer = function(d2) {
@@ -120,6 +121,7 @@ window.onload = function() {
 				quiz.push(ans)
 		}
 		*/
+		quiz.push(ans)
 	}
 
 	startQuiz("クイズ 4Q日本", quiz, function(pnt) {
